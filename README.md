@@ -1,43 +1,41 @@
+# Venue Booking System - CloudPART3-KONES
 
-# ?? Venue Booking System - CloudPART3-KONES
+| Version | ASP.NET | Azure | Database |
+|---------|---------|-------|----------|
+| 3.0 | Core 6.0 | Deployed | Azure SQL |
 
-![Version](https://img.shields.io/badge/version-3.0-blue)
-![ASP.NET](https://img.shields.io/badge/ASP.NET-Core%206.0-purple)
-![Azure](https://img.shields.io/badge/Azure-Deployed-blue)
-![Database](https://img.shields.io/badge/Database-Azure%20SQL-green)
-
-## ?? Project Overview
+## Project Overview
 
 A comprehensive venue booking management system built with ASP.NET Core MVC and deployed on Microsoft Azure. The system allows users to manage venues, events, and bookings with advanced filtering capabilities, double-booking prevention, and real-time availability tracking.
 
-**Live Application URL:** [https://cloudpart220260612150138-cjaregbga8ghcdah.canadacentral-01.azurewebsites.net/]
+**Live Application URL:** https://cloudpart220260612150138-cjaregbga8ghcdah.canadacentral-01.azurewebsites.net/
 
 ---
 
-## ? Features
+## Features
 
-### ?? Advanced Search & Filtering
+### Advanced Search and Filtering
 - Search by Booking ID, Event Name, Venue Name, or Organizer
 - Filter by Event Type (Conference, Wedding, Workshop, Concert, etc.)
 - Filter by Venue Availability Status
 - Date Range Filtering (Start Date / End Date)
 - Real-time search results with count
 
-### ?? Venue Management
+### Venue Management
 - Create, Read, Update, Delete venues
 - Upload venue images to Azure Blob Storage
 - Track venue availability status (Available, Maintenance, Booked, Limited)
 - Set operating hours and capacity
 - View venue statistics and booking history
 
-### ?? Event Management
+### Event Management
 - Create and manage events with categories
 - Event Type classification system (8 predefined types)
 - Set event dates, durations, and organizer information
 - Track upcoming and past events
 - View event booking statistics
 
-### ?? Booking Management
+### Booking Management
 - Book venues for specific events
 - Double-booking prevention system
 - Track booking status (Confirmed, Cancelled, Completed)
@@ -45,14 +43,14 @@ A comprehensive venue booking management system built with ASP.NET Core MVC and 
 - Automatic conflict detection
 - Email-style confirmation messages
 
-### ?? Dashboard & Reporting
+### Dashboard and Reporting
 - Real-time statistics cards
 - Recent bookings display
 - Venue availability overview
 - Booking status breakdown
 - Quick action buttons
 
-### ?? Azure Integration
+### Azure Integration
 - Azure App Service hosting
 - Azure SQL Database for data persistence
 - Azure Blob Storage for image uploads
@@ -60,9 +58,10 @@ A comprehensive venue booking management system built with ASP.NET Core MVC and 
 
 ---
 
-## ??? Technology Stack
+## Technology Stack
 
 ### Backend
+
 | Technology | Purpose |
 |------------|---------|
 | ASP.NET Core MVC 6.0 | Web framework |
@@ -71,6 +70,7 @@ A comprehensive venue booking management system built with ASP.NET Core MVC and 
 | LINQ | Data querying |
 
 ### Frontend
+
 | Technology | Purpose |
 |------------|---------|
 | Bootstrap 5 | UI framework |
@@ -79,6 +79,7 @@ A comprehensive venue booking management system built with ASP.NET Core MVC and 
 | HTML5/CSS3 | Structure and styling |
 
 ### Database
+
 | Technology | Purpose |
 |------------|---------|
 | Azure SQL Database | Production database |
@@ -86,6 +87,7 @@ A comprehensive venue booking management system built with ASP.NET Core MVC and 
 | Entity Framework Migrations | Database version control |
 
 ### Azure Services
+
 | Service | Purpose |
 |---------|---------|
 | Azure App Service | Web application hosting |
@@ -95,66 +97,67 @@ A comprehensive venue booking management system built with ASP.NET Core MVC and 
 
 ---
 
-## ?? Project Structure
+## Project Structure
 
 ```
 CloudPART3-KONES/
-?
-??? Controllers/
-?   ??? BookingsController.cs      # Booking management with filters
-?   ??? EventsController.cs         # Event CRUD operations
-?   ??? VenuesController.cs         # Venue management with images
-?   ??? HomeController.cs           # Dashboard and statistics
-?
-??? Models/
-?   ??? Booking.cs                  # Booking entity
-?   ??? Event.cs                    # Event entity
-?   ??? Venue.cs                    # Venue entity
-?   ??? EventType.cs                # Event type lookup
-?   ??? BookingViewModel.cs         # Booking view model
-?   ??? BookingFilterViewModel.cs   # Advanced filters model
-?
-??? Views/
-?   ??? Bookings/
-?   ?   ??? Index.cshtml            # Main page with filters
-?   ?   ??? Create.cshtml           # Create booking form
-?   ?   ??? Delete.cshtml           # Cancel booking
-?   ??? Events/
-?   ?   ??? Index.cshtml            # Events list
-?   ?   ??? Create.cshtml           # Create event
-?   ?   ??? Delete.cshtml           # Delete event
-?   ??? Venues/
-?   ?   ??? Index.cshtml            # Venues list
-?   ?   ??? Create.cshtml           # Add venue with image
-?   ?   ??? Delete.cshtml           # Delete venue
-?   ??? Home/
-?       ??? Index.cshtml            # Dashboard
-?
-??? Data/
-?   ??? ApplicationDbContext.cs     # Database context
-?
-??? Services/
-?   ??? ValidationService.cs        # Booking validation
-?   ??? BlobStorageService.cs       # Azure storage operations
-?
-??? Migrations/                      # EF Core migrations
-??? wwwroot/                        # Static files
-?   ??? css/
-?   ??? js/
-?   ??? images/
-?
-??? appsettings.json                # Configuration
-??? Program.cs                      # Application entry point
-??? README.md                       # Documentation
+|
+├── Controllers/
+|   ├── BookingsController.cs      # Booking management with filters
+|   ├── EventsController.cs         # Event CRUD operations
+|   ├── VenuesController.cs         # Venue management with images
+|   └── HomeController.cs           # Dashboard and statistics
+|
+├── Models/
+|   ├── Booking.cs                  # Booking entity
+|   ├── Event.cs                    # Event entity
+|   ├── Venue.cs                    # Venue entity
+|   ├── EventType.cs                # Event type lookup
+|   ├── BookingViewModel.cs         # Booking view model
+|   └── BookingFilterViewModel.cs   # Advanced filters model
+|
+├── Views/
+|   ├── Bookings/
+|   |   ├── Index.cshtml            # Main page with filters
+|   |   ├── Create.cshtml           # Create booking form
+|   |   └── Delete.cshtml           # Cancel booking
+|   ├── Events/
+|   |   ├── Index.cshtml            # Events list
+|   |   ├── Create.cshtml           # Create event
+|   |   └── Delete.cshtml           # Delete event
+|   ├── Venues/
+|   |   ├── Index.cshtml            # Venues list
+|   |   ├── Create.cshtml           # Add venue with image
+|   |   └── Delete.cshtml           # Delete venue
+|   └── Home/
+|       └── Index.cshtml            # Dashboard
+|
+├── Data/
+|   └── ApplicationDbContext.cs     # Database context
+|
+├── Services/
+|   ├── ValidationService.cs        # Booking validation
+|   └── BlobStorageService.cs       # Azure storage operations
+|
+├── Migrations/                      # EF Core migrations
+├── wwwroot/                        # Static files
+|   ├── css/
+|   ├── js/
+|   └── images/
+|
+├── appsettings.json                # Configuration
+├── Program.cs                      # Application entry point
+└── README.md                       # Documentation
 ```
 
 ---
 
-## ??? Database Schema
+## Database Schema
 
 ### Tables
 
-#### EventTypes (Lookup Table)
+**EventTypes (Lookup Table)**
+
 | Column | Type | Description |
 |--------|------|-------------|
 | EventTypeID | INT (PK) | Primary key |
@@ -163,7 +166,8 @@ CloudPART3-KONES/
 | IsActive | BIT | Active status |
 | DisplayOrder | INT | Sort order |
 
-#### Venues
+**Venues**
+
 | Column | Type | Description |
 |--------|------|-------------|
 | VenueID | INT (PK) | Primary key |
@@ -174,7 +178,8 @@ CloudPART3-KONES/
 | OperatingHours | NVARCHAR(200) | Business hours |
 | ImageUrl | NVARCHAR(500) | Azure storage URL |
 
-#### Events
+**Events**
+
 | Column | Type | Description |
 |--------|------|-------------|
 | EventID | INT (PK) | Primary key |
@@ -184,7 +189,8 @@ CloudPART3-KONES/
 | DurationHours | INT | Duration in hours |
 | OrganizerName | NVARCHAR(100) | Organizer name |
 
-#### Bookings
+**Bookings**
+
 | Column | Type | Description |
 |--------|------|-------------|
 | BookingID | INT (PK) | Primary key |
@@ -195,7 +201,7 @@ CloudPART3-KONES/
 
 ---
 
-## ?? Setup Instructions
+## Setup Instructions
 
 ### Prerequisites
 - Visual Studio 2022 or later
@@ -205,13 +211,15 @@ CloudPART3-KONES/
 
 ### Local Development Setup
 
-1. **Clone the repository**
+**1. Clone the repository**
+
 ```bash
 git clone https://github.com/Kone-M/CloudPART3-KONES.git
 cd CloudPART3-KONES
 ```
 
-2. **Update connection string** in `appsettings.json`
+**2. Update connection string** in `appsettings.json`
+
 ```json
 {
   "ConnectionStrings": {
@@ -220,47 +228,55 @@ cd CloudPART3-KONES
 }
 ```
 
-3. **Install dependencies**
+**3. Install dependencies**
+
 ```bash
 dotnet restore
 ```
 
-4. **Run database migrations**
+**4. Run database migrations**
+
 ```bash
 dotnet ef database update
 ```
 
-5. **Run the application**
+**5. Run the application**
+
 ```bash
 dotnet run
 ```
 
-6. **Open browser** and navigate to:
+**6. Open browser** and navigate to:
+
 ```
 https://localhost:5001
 ```
 
 ### Azure Deployment
 
-1. **Create Azure App Service**
+**1. Create Azure App Service**
+
 ```bash
 az appservice plan create --name VenueBookingPlan --resource-group VenueBookingRG --sku F1 --is-linux
 az webapp create --name venuebookingapp --resource-group VenueBookingRG --plan VenueBookingPlan --runtime "DOTNET:6.0"
 ```
 
-2. **Create Azure SQL Database**
+**2. Create Azure SQL Database**
+
 ```bash
 az sql server create --name venuebooking-server --resource-group VenueBookingRG --location eastus --admin-user adminuser --admin-password YourPassword123!
 az sql db create --resource-group VenueBookingRG --server venuebooking-server --name VenueBookingDB --service-objective S0
 ```
 
-3. **Create Azure Storage Account** (for images)
+**3. Create Azure Storage Account** (for images)
+
 ```bash
 az storage account create --name venuebookingstorage --resource-group VenueBookingRG --location eastus --sku Standard_LRS
 az storage container create --name venueimages --account-name venuebookingstorage
 ```
 
-4. **Deploy the application**
+**4. Deploy the application**
+
 ```bash
 dotnet publish -c Release -o ./publish
 az webapp deployment source config-zip --resource-group VenueBookingRG --name venuebookingapp --src ./publish.zip
@@ -268,9 +284,10 @@ az webapp deployment source config-zip --resource-group VenueBookingRG --name ve
 
 ---
 
-## ?? Configuration
+## Configuration
 
 ### appsettings.json Structure
+
 ```json
 {
   "ConnectionStrings": {
@@ -293,40 +310,44 @@ az webapp deployment source config-zip --resource-group VenueBookingRG --name ve
 
 ---
 
-## ?? API Endpoints
+## API Endpoints
 
 ### Statistics Endpoints
+
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/Home/GetStatistics` | GET | System-wide statistics |
-| `/Home/GetRecentBookings` | GET | Recent 10 bookings |
-| `/Home/GetVenuesByStatus` | GET | Venues grouped by status |
-| `/Home/GetBookingsByStatus` | GET | Bookings grouped by status |
-| `/Home/GetEventTypes` | GET | All event types |
+| /Home/GetStatistics | GET | System-wide statistics |
+| /Home/GetRecentBookings | GET | Recent 10 bookings |
+| /Home/GetVenuesByStatus | GET | Venues grouped by status |
+| /Home/GetBookingsByStatus | GET | Bookings grouped by status |
+| /Home/GetEventTypes | GET | All event types |
 
 ### Booking Endpoints
+
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/Bookings/Index` | GET | Main page with filters |
-| `/Bookings/Create` | GET/POST | Create new booking |
-| `/Bookings/Delete/{id}` | GET/POST | Cancel booking |
-| `/Bookings/Details/{id}` | GET | Booking details |
+| /Bookings/Index | GET | Main page with filters |
+| /Bookings/Create | GET/POST | Create new booking |
+| /Bookings/Delete/{id} | GET/POST | Cancel booking |
+| /Bookings/Details/{id} | GET | Booking details |
 
 ### Venue Endpoints
+
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/Venues` | GET | List all venues |
-| `/Venues/Create` | GET/POST | Add new venue |
-| `/Venues/Edit/{id}` | GET/POST | Edit venue |
-| `/Venues/Delete/{id}` | GET/POST | Delete venue |
+| /Venues | GET | List all venues |
+| /Venues/Create | GET/POST | Add new venue |
+| /Venues/Edit/{id} | GET/POST | Edit venue |
+| /Venues/Delete/{id} | GET/POST | Delete venue |
 
 ---
 
-## ?? Testing
+## Testing
 
 ### Sample Test Data
 
 **Venues:**
+
 ```sql
 INSERT INTO Venues (VenueName, Location, Capacity, AvailabilityStatus, OperatingHours)
 VALUES 
@@ -336,40 +357,43 @@ VALUES
 ```
 
 **Event Types (Pre-seeded):**
-- Conference
-- Wedding
-- Workshop
-- Concert
-- Corporate Event
-- Birthday Party
-- Exhibition
-- Other
+
+| ID | Category Name |
+|----|---------------|
+| 1 | Conference |
+| 2 | Wedding |
+| 3 | Workshop |
+| 4 | Concert |
+| 5 | Corporate Event |
+| 6 | Birthday Party |
+| 7 | Exhibition |
+| 8 | Other |
 
 ---
 
-## ?? Troubleshooting
+## Troubleshooting
 
 ### Common Issues and Solutions
 
 | Issue | Solution |
 |-------|----------|
-| **Database connection error** | Check connection string and firewall rules |
-| **Image upload fails** | Verify Azure Storage container permissions |
-| **Double-booking not working** | Check unique index on VenueID + BookingDate |
-| **Filters not showing** | Ensure BookingFilterViewModel is used |
-| **Migration errors** | Run `dotnet ef migrations add` and `dotnet ef database update` |
+| Database connection error | Check connection string and firewall rules |
+| Image upload fails | Verify Azure Storage container permissions |
+| Double-booking not working | Check unique index on VenueID + BookingDate |
+| Filters not showing | Ensure BookingFilterViewModel is used |
+| Migration errors | Run `dotnet ef migrations add` and `dotnet ef database update` |
 
 ---
 
-## ?? Contributors
+## Contributors
 
 | Name | Role | Contact |
 |------|------|---------|
-| Kone Moshapo | Full Stack Developer | [GitHub](https://github.com/Kone-M) |
+| Kone Moshapo | Full Stack Developer | GitHub: Kone-M |
 
 ---
 
-## ?? Acknowledgments
+## Acknowledgments
 
 - Microsoft Azure Documentation
 - ASP.NET Core Community
@@ -378,13 +402,13 @@ VALUES
 
 ---
 
-## ?? License
+## License
 
 This project is for educational purposes as part of the CLDV7111W POE (Proof of Event) assignment.
 
 ---
 
-## ?? Links
+## Links
 
 - **GitHub Repository:** https://github.com/Kone-M/CloudPART3-KONES
 - **Live Application:** https://cloudpart220260612150138-cjaregbga8ghcdah.canadacentral-01.azurewebsites.net/
@@ -392,7 +416,7 @@ This project is for educational purposes as part of the CLDV7111W POE (Proof of 
 
 ---
 
-## ?? Support
+## Support
 
 For issues or questions:
 - Create an issue on GitHub
@@ -400,7 +424,7 @@ For issues or questions:
 
 ---
 
-## ?? Version History
+## Version History
 
 | Version | Date | Changes |
 |---------|------|---------|
@@ -410,17 +434,27 @@ For issues or questions:
 
 ---
 
-## ?? Future Enhancements
+## Future Enhancements
 
-- [ ] User authentication and authorization
-- [ ] Email notifications for bookings
-- [ ] Calendar view for bookings
-- [ ] Payment integration
-- [ ] Mobile responsive PWA
-- [ ] Export reports to PDF/Excel
-- [ ] Real-time availability calendar
-- [ ] QR code check-in system
+- User authentication and authorization
+- Email notifications for bookings
+- Calendar view for bookings
+- Payment integration
+- Mobile responsive PWA
+- Export reports to PDF/Excel
+- Real-time availability calendar
+- QR code check-in system
 
 ---
 
-**Built with ?? using ASP.NET Core and Azure**
+**Built with ASP.NET Core and Microsoft Azure**
+```
+
+This professional README includes:
+- Clean formatting without emojis
+- Clear section headers
+- Proper tables for data presentation
+- Complete setup instructions
+- API documentation
+- Troubleshooting guide
+- Professional language throughout
