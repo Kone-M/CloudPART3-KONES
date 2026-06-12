@@ -1,0 +1,469 @@
+﻿@model VenueBookingSystem.Models.BookingFilterViewModel
+
+@{
+    ViewData["Title"] = "Booking Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="bi bi-calendar-check"></i>
+            Booking Management Dashboard
+        </h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> New Booking
+        </a>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["InfoMessage"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <i class="bi bi-info-circle-fill"></i> @TempData["InfoMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- ADVANCED FILTERS SECTION -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">
+                <i class="bi bi-funnel"></i> Advanced Search & Filters
+            </h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="Index" method="get" id="filterForm">
+                <div class="row g-3">
+                    <!-- Search Term -->
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-search"></i> Search
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white">
+                                <i class="bi bi-search text-primary"></i>
+                            </span>
+                            <input type="text"
+                                   name="searchTerm"
+                                   class="form-control"
+                                   placeholder="Search by Booking ID, Event Name, Venue Name, or Organizer..."
+                                   value="@Model.SearchTerm" />
+                            @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                            {
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle"></i> Clear
+                                </a>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Event Type Filter -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-tags"></i> Event Type
+                        </label>
+                        <select name="eventTypeId" class="form-select">
+                            <option value="">All Event Types</option>
+                            @if (Model.EventTypes != null)
+                            {
+                                foreach (var type in Model.EventTypes)
+                                {
+                                    if (Model.EventTypeID == type.EventTypeID)
+                                    {
+                                        <option value="@type.EventTypeID" selected>@type.CategoryName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@type.EventTypeID">@type.CategoryName</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Venue Availability Filter -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-building"></i> Venue Availability
+                        </label>
+                        <select name="venueAvailability" class="form-select">
+                            <option value="All" selected="@(Model.VenueAvailability == "All")">All Venues</option>
+                            <option value="Available" selected="@(Model.VenueAvailability == "Available")">✅ Available</option>
+                            <option value="Maintenance" selected="@(Model.VenueAvailability == "Maintenance")">🔧 Maintenance</option>
+                            <option value="Booked" selected="@(Model.VenueAvailability == "Booked")">📅 Booked</option>
+                            <option value="Limited" selected="@(Model.VenueAvailability == "Limited")">⚠️ Limited Availability</option>
+                        </select>
+                    </div>
+
+                    <!-- Start Date Filter -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-calendar-start"></i> Start Date
+                        </label>
+                        <input type="date" name="startDate" class="form-control" value="@(Model.StartDate?.ToString("yyyy-MM-dd"))" />
+                    </div>
+
+                    <!-- End Date Filter -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-calendar-end"></i> End Date
+                        </label>
+                        <input type="date" name="endDate" class="form-control" value="@(Model.EndDate?.ToString("yyyy-MM-dd"))" />
+                    </div>
+
+                    <!-- Filter Actions -->
+                    <div class="col-md-12">
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search"></i> Apply Filters
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-eraser"></i> Clear All Filters
+                            </a>
+                            @if (Model.FilteredResultsCount > 0)
+                            {
+                                <span class="btn btn-info text-white">
+                                    <i class="bi bi-info-circle"></i> Found @Model.FilteredResultsCount results
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title">Total Venues</h6>
+                            <h2 class="mb-0">@Model.TotalVenues</h2>
+                        </div>
+                        <i class="bi bi-building fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title">Available Venues</h6>
+                            <h2 class="mb-0">@Model.AvailableVenuesCount</h2>
+                        </div>
+                        <i class="bi bi-check-circle fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title">Total Events</h6>
+                            <h2 class="mb-0">@Model.TotalEvents</h2>
+                        </div>
+                        <i class="bi bi-calendar-event fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title">Total Bookings</h6>
+                            <h2 class="mb-0">@Model.TotalBookings</h2>
+                        </div>
+                        <i class="bi bi-calendar-check fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AVAILABLE VENUES SECTION -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">
+                <i class="bi bi-building text-primary"></i>
+                Available Venues (@Model.AvailableVenues.Count)
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (!Model.AvailableVenues.Any())
+            {
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle"></i> No venues available matching the criteria.
+                    <a asp-controller="Venues" asp-action="Create" class="alert-link">Click here to add a venue</a>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var venue in Model.AvailableVenues.Take(6))
+                    {
+                        <div class="col-md-4 col-lg-3 mb-3">
+                            <div class="card h-100 shadow-sm">
+                                @if (!string.IsNullOrEmpty(venue.ImageUrl))
+                                {
+                                    <img src="@venue.ImageUrl" class="card-img-top" alt="@venue.VenueName" style="height: 150px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="bg-light text-center py-4">
+                                        <i class="bi bi-building fs-1 text-muted"></i>
+                                    </div>
+                                }
+                                <div class="card-body">
+                                    <h6 class="card-title">@venue.VenueName</h6>
+                                    <p class="card-text small">
+                                        <i class="bi bi-geo-alt"></i> @venue.Location<br />
+                                        <i class="bi bi-people"></i> Capacity: @venue.Capacity<br />
+                                        <i class="bi bi-clock"></i> Hours: @(venue.OperatingHours ?? "Flexible")<br />
+                                        <span class="badge bg-@(venue.AvailabilityStatus == "Available" ? "success" : "warning")">
+                                            @venue.AvailabilityStatus
+                                        </span>
+                                    </p>
+                                    <a asp-action="Create" asp-route-venueId="@venue.VenueID" class="btn btn-sm btn-outline-primary w-100">
+                                        <i class="bi bi-calendar-plus"></i> Book This Venue
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                @if (Model.AvailableVenues.Count > 6)
+                {
+                    <div class="text-center mt-3">
+                        <a asp-controller="Venues" asp-action="Index" class="btn btn-link">
+                            View all @Model.AvailableVenues.Count venues...
+                        </a>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- AVAILABLE EVENTS SECTION -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">
+                <i class="bi bi-calendar-event text-success"></i>
+                Events (@Model.AvailableEvents.Count)
+                @if (!string.IsNullOrEmpty(Model.SelectedEventTypeName))
+                {
+                    <span class="badge bg-info ms-2">Filtered by: @Model.SelectedEventTypeName</span>
+                }
+                @if (Model.StartDate.HasValue || Model.EndDate.HasValue)
+                {
+                    <span class="badge bg-secondary ms-2">Date Range Applied</span>
+                }
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (!Model.AvailableEvents.Any())
+            {
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle"></i> No events found matching the selected filters.
+                    <a asp-controller="Events" asp-action="Create" class="alert-link">Click here to create an event</a>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Event Name</th>
+                                <th>Event Type</th>
+                                <th>Description</th>
+                                <th>Event Date</th>
+                                <th>Duration</th>
+                                <th>Organizer</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var evnt in Model.AvailableEvents.Take(10))
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@evnt.EventName</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">@(evnt.EventType?.CategoryName ?? "Uncategorized")</span>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(evnt.Description))
+                                        {
+                                            <small>@(evnt.Description.Length > 50 ? evnt.Description.Substring(0, 50) + "..." : evnt.Description)</small>
+                                        }
+                                        else
+                                        {
+                                            <small class="text-muted">—</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        <i class="bi bi-calendar"></i>
+                                        @evnt.EventDate.ToString("yyyy-MM-dd HH:mm")
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">@evnt.DurationHours hrs</span>
+                                    </td>
+                                    <td>@evnt.OrganizerName</td>
+                                    <td>
+                                        <a asp-action="Create" asp-route-eventId="@evnt.EventID" class="btn btn-sm btn-outline-success">
+                                            <i class="bi bi-calendar-plus"></i> Book Venue
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @if (Model.AvailableEvents.Count > 10)
+                {
+                    <div class="text-center mt-3">
+                        <a asp-controller="Events" asp-action="Index" class="btn btn-link">
+                            View all @Model.AvailableEvents.Count events...
+                        </a>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- EXISTING BOOKINGS SECTION -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">
+                <i class="bi bi-table"></i>
+                Bookings (@Model.Bookings.Count)
+                @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                {
+                    <span class="badge bg-primary ms-2">Search: @Model.SearchTerm</span>
+                }
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Event Name</th>
+                            <th>Venue Name</th>
+                            <th>Booking Date</th>
+                            <th>Event Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Bookings.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="alert alert-warning mb-0">
+                                        <i class="bi bi-inbox fs-1 d-block"></i>
+                                        <p class="mt-2">No bookings found matching your criteria.</p>
+                                        <a asp-action="Create" class="btn btn-primary btn-sm">Create your first booking</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model.Bookings)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-secondary">#@item.BookingID</span>
+                                    </td>
+                                    <td><strong>@item.EventName</strong></td>
+                                    <td>@item.VenueName</td>
+                                    <td>
+                                        <i class="bi bi-clock"></i>
+                                        @item.BookingDate.ToString("yyyy-MM-dd HH:mm")
+                                    </td>
+                                    <td>
+                                        <i class="bi bi-calendar-event"></i>
+                                        @item.EventDate.ToString("yyyy-MM-dd HH:mm")
+                                        <br />
+                                        <small class="text-muted">(@item.DurationHours hrs)</small>
+                                    </td>
+                                    <td>
+                                        @{
+                                            var statusClass = item.Status switch
+                                            {
+                                                "Confirmed" => "success",
+                                                "Cancelled" => "danger",
+                                                "Completed" => "secondary",
+                                                _ => "warning"
+                                            };
+                                        }
+                                        <span class="badge bg-@statusClass">
+                                            @item.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a asp-action="Delete" asp-route-id="@item.BookingID"
+                                           class="btn btn-sm btn-danger"
+                                           onclick="return confirm('Are you sure you want to cancel this booking?')">
+                                            <i class="bi bi-x-circle"></i> Cancel
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+
+        // Date range validation
+        document.getElementById('filterForm')?.addEventListener('submit', function(e) {
+            var startDate = document.querySelector('input[name="startDate"]').value;
+            var endDate = document.querySelector('input[name="endDate"]').value;
+
+            if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+                e.preventDefault();
+                alert('Start date cannot be after end date!');
+            }
+        });
+    </script>
+}

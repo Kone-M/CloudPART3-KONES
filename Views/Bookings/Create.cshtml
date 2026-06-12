@@ -1,0 +1,137 @@
+﻿@model VenueBookingSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "Create New Booking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-calendar-plus"></i> Create New Booking
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <!-- Venue Selection -->
+                        <div class="mb-3">
+                            <label asp-for="VenueID" class="form-label fw-bold">
+                                <i class="bi bi-building"></i> Venue
+                            </label>
+                            <select asp-for="VenueID" class="form-select">
+                                <option value="">-- Select Venue --</option>
+                                @if (ViewBag.Venues != null)
+                                {
+                                    foreach (var venue in ViewBag.Venues)
+                                    {
+                                        if (venue.IsActive)
+                                        {
+                                            <option value="@venue.VenueID" selected="@(Model?.VenueID == venue.VenueID)">
+                                                @venue.VenueName - Capacity: @venue.Capacity, Location: @venue.Location
+                                            </option>
+                                        }
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="VenueID" class="text-danger"></span>
+                            @if (ViewBag.Venues == null || ViewBag.Venues.Count == 0)
+                            {
+                                <div class="alert alert-warning mt-2">
+                                    <i class="bi bi-exclamation-triangle"></i> No venues available.
+                                    <a asp-controller="Venues" asp-action="Create">Click here to add a venue</a>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Event Selection -->
+                        <div class="mb-3">
+                            <label asp-for="EventID" class="form-label fw-bold">
+                                <i class="bi bi-calendar-event"></i> Event
+                            </label>
+                            <select asp-for="EventID" class="form-select">
+                                <option value="">-- Select Event --</option>
+                                @if (ViewBag.Events != null)
+                                {
+                                    foreach (var evnt in ViewBag.Events)
+                                    {
+                                        <option value="@evnt.EventID" selected="@(Model?.EventID == evnt.EventID)">
+                                            @evnt.EventName - Date: @evnt.EventDate.ToString("yyyy-MM-dd HH:mm"), Duration: @evnt.DurationHours hrs
+                                        </option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="EventID" class="text-danger"></span>
+                            @if (ViewBag.Events == null || ViewBag.Events.Count == 0)
+                            {
+                                <div class="alert alert-warning mt-2">
+                                    <i class="bi bi-exclamation-triangle"></i> No events available.
+                                    <a asp-controller="Events" asp-action="Create">Click here to create an event</a>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Booking Date & Time -->
+                        <div class="mb-3">
+                            <label asp-for="BookingDate" class="form-label fw-bold">
+                                <i class="bi bi-clock"></i> Booking Date & Time
+                            </label>
+                            <input asp-for="BookingDate" class="form-control" type="datetime-local" />
+                            <span asp-validation-for="BookingDate" class="text-danger"></span>
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle"></i> Select the date and time for your booking. The venue must be available at this time.
+                            </small>
+                        </div>
+
+                        <!-- Special Requests -->
+                        <div class="mb-3">
+                            <label asp-for="SpecialRequests" class="form-label fw-bold">
+                                <i class="bi bi-chat-text"></i> Special Requests
+                            </label>
+                            <textarea asp-for="SpecialRequests" class="form-control" rows="3"
+                                      placeholder="Any special requests or requirements?"></textarea>
+                            <span asp-validation-for="SpecialRequests" class="text-danger"></span>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between gap-2 mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Create Booking
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Set default date to current date + 1 hour as minimum
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookingDateInput = document.querySelector('input[type="datetime-local"]');
+            if (bookingDateInput && !bookingDateInput.value) {
+                const now = new Date();
+                now.setHours(now.getHours() + 1);
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                bookingDateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+        });
+    </script>
+}

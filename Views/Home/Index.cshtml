@@ -1,0 +1,391 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h1 class="display-4">Welcome to Venue Booking System</h1>
+            <p class="lead">Manage venues, events, and bookings all in one place</p>
+            <hr class="w-50 mx-auto" />
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- ADVANCED FILTERS SECTION - DASHBOARD VERSION -->
+    <!-- ========================================= -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">
+                <i class="bi bi-funnel"></i> Quick Search & Filters
+            </h5>
+        </div>
+        <div class="card-body">
+            <form asp-controller="Bookings" asp-action="Index" method="get" id="filterForm">
+                <div class="row g-3">
+                    <!-- Search Term -->
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white">
+                                <i class="bi bi-search text-primary"></i>
+                            </span>
+                            <input type="text"
+                                   name="searchTerm"
+                                   class="form-control"
+                                   placeholder="Search bookings by ID, Event Name, Venue Name, or Organizer..."
+                                   id="searchTermInput" />
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Event Type Filter -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small">
+                            <i class="bi bi-tags"></i> Event Type
+                        </label>
+                        <select name="eventTypeId" class="form-select form-select-sm" id="eventTypeSelect">
+                            <option value="">All Types</option>
+                            <!-- Will be populated via AJAX -->
+                        </select>
+                    </div>
+
+                    <!-- Venue Availability Filter -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small">
+                            <i class="bi bi-building"></i> Venue Status
+                        </label>
+                        <select name="venueAvailability" class="form-select form-select-sm" id="availabilitySelect">
+                            <option value="All">All Venues</option>
+                            <option value="Available">✅ Available</option>
+                            <option value="Maintenance">🔧 Maintenance</option>
+                            <option value="Booked">📅 Booked</option>
+                            <option value="Limited">⚠️ Limited</option>
+                        </select>
+                    </div>
+
+                    <!-- Start Date Filter -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small">
+                            <i class="bi bi-calendar-start"></i> From Date
+                        </label>
+                        <input type="date" name="startDate" class="form-control form-control-sm" id="startDateInput" />
+                    </div>
+
+                    <!-- End Date Filter -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small">
+                            <i class="bi bi-calendar-end"></i> To Date
+                        </label>
+                        <input type="date" name="endDate" class="form-control form-control-sm" id="endDateInput" />
+                    </div>
+
+                    <!-- Filter Actions -->
+                    <div class="col-md-12">
+                        <div class="d-flex gap-2">
+                            <a asp-controller="Bookings" asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-arrow-right"></i> Go to Advanced Filters
+                            </a>
+                        </div>
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle"></i> Use the filters above to quickly find bookings, or click "Go to Advanced Filters" for more options.
+                        </small>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Statistics Cards - Row 1 -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card text-center shadow-sm border-primary">
+                <div class="card-body">
+                    <i class="bi bi-building fs-1 text-primary"></i>
+                    <h3 class="mt-2" id="venueCount">Loading...</h3>
+                    <p class="text-muted">Total Venues</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card text-center shadow-sm border-success">
+                <div class="card-body">
+                    <i class="bi bi-calendar-event fs-1 text-success"></i>
+                    <h3 class="mt-2" id="eventCount">Loading...</h3>
+                    <p class="text-muted">Total Events</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card text-center shadow-sm border-warning">
+                <div class="card-body">
+                    <i class="bi bi-calendar-check fs-1 text-warning"></i>
+                    <h3 class="mt-2" id="bookingCount">Loading...</h3>
+                    <p class="text-muted">Total Bookings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards - Row 2 -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card text-center shadow-sm border-info">
+                <div class="card-body">
+                    <i class="bi bi-tags fs-1 text-info"></i>
+                    <h3 class="mt-2" id="eventTypeCount">Loading...</h3>
+                    <p class="text-muted">Event Types</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card text-center shadow-sm border-success">
+                <div class="card-body">
+                    <i class="bi bi-check-circle fs-1 text-success"></i>
+                    <h3 class="mt-2" id="availableVenuesCount">Loading...</h3>
+                    <p class="text-muted">Available Venues</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card text-center shadow-sm border-danger">
+                <div class="card-body">
+                    <i class="bi bi-x-circle fs-1 text-danger"></i>
+                    <h3 class="mt-2" id="cancelledBookingsCount">Loading...</h3>
+                    <p class="text-muted">Cancelled Bookings</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card text-center shadow-sm border-secondary">
+                <div class="card-body">
+                    <i class="bi bi-calendar-week fs-1 text-secondary"></i>
+                    <h3 class="mt-2" id="upcomingEventsCount">Loading...</h3>
+                    <p class="text-muted">Upcoming Events</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-lightning"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <a asp-controller="Venues" asp-action="Create" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-plus-circle"></i> Add New Venue
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <a asp-controller="Events" asp-action="Create" class="btn btn-outline-success w-100">
+                                <i class="bi bi-plus-circle"></i> Add New Event
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <a asp-controller="Bookings" asp-action="Create" class="btn btn-outline-warning w-100">
+                                <i class="bi bi-plus-circle"></i> Create Booking
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Cards with Filters Applied -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0"><i class="bi bi-building"></i> Venues by Availability</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover" id="venuesByStatusTable">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Count</th>
+                                    <th>%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="3" class="text-center">Loading...</td>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0"><i class="bi bi-calendar"></i> Bookings by Status</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover" id="bookingsByStatusTable">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Count</th>
+                                    <th>%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="3" class="text-center">Loading...</td>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Bookings Section -->
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="bi bi-activity"></i> Recent Bookings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover" id="recentBookingsTable">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Event</th>
+                                    <th>Venue</th>
+                                    <th>Booking Date</th>
+                                    <th>Event Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="text-center">Loading recent bookings...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-2">
+                        <a asp-controller="Bookings" asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                            View All Bookings <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Load Event Types for filter dropdown
+            $.ajax({
+                url: '/Home/GetEventTypes',
+                type: 'GET',
+                success: function(data) {
+                    var select = $('#eventTypeSelect');
+                    $.each(data, function(i, type) {
+                        select.append('<option value="' + type.eventTypeID + '">' + type.categoryName + '</option>');
+                    });
+                }
+            });
+
+            // Load statistics
+            $.ajax({
+                url: '/Home/GetStatistics',
+                type: 'GET',
+                success: function(data) {
+                    $('#venueCount').text(data.venueCount);
+                    $('#eventCount').text(data.eventCount);
+                    $('#bookingCount').text(data.bookingCount);
+                    $('#eventTypeCount').text(data.eventTypeCount || 0);
+                    $('#availableVenuesCount').text(data.availableVenuesCount || 0);
+                    $('#cancelledBookingsCount').text(data.cancelledBookingsCount || 0);
+                    $('#upcomingEventsCount').text(data.upcomingEventsCount || 0);
+                },
+                error: function() {
+                    $('#venueCount, #eventCount, #bookingCount, #eventTypeCount, #availableVenuesCount, #cancelledBookingsCount, #upcomingEventsCount').text('Error');
+                }
+            });
+
+            // Load venues by status
+            $.ajax({
+                url: '/Home/GetVenuesByStatus',
+                type: 'GET',
+                success: function(data) {
+                    var tbody = $('#venuesByStatusTable tbody');
+                    tbody.empty();
+                    var total = data.reduce((sum, item) => sum + item.count, 0);
+                    $.each(data, function(i, item) {
+                        var percentage = total > 0 ? ((item.count / total) * 100).toFixed(1) : 0;
+                        tbody.append('<tr><td>' + item.status + '</td><td>' + item.count + '</td><td>' + percentage + '%</td></tr>');
+                    });
+                }
+            });
+
+            // Load bookings by status
+            $.ajax({
+                url: '/Home/GetBookingsByStatus',
+                type: 'GET',
+                success: function(data) {
+                    var tbody = $('#bookingsByStatusTable tbody');
+                    tbody.empty();
+                    var total = data.reduce((sum, item) => sum + item.count, 0);
+                    $.each(data, function(i, item) {
+                        var percentage = total > 0 ? ((item.count / total) * 100).toFixed(1) : 0;
+                        tbody.append('<tr><td>' + item.status + '</td><td>' + item.count + '</td><td>' + percentage + '%</td></tr>');
+                    });
+                }
+            });
+
+            // Load recent bookings
+            $.ajax({
+                url: '/Home/GetRecentBookings',
+                type: 'GET',
+                success: function(data) {
+                    var tbody = $('#recentBookingsTable tbody');
+                    tbody.empty();
+
+                    if (data.length === 0) {
+                        tbody.append('<tr><td colspan="6" class="text-center">No recent bookings found.</td></tr>');
+                    } else {
+                        $.each(data, function(i, booking) {
+                            var statusClass = booking.status === 'Confirmed' ? 'success' :
+                                            (booking.status === 'Cancelled' ? 'danger' : 'warning');
+                            var row = '<tr>' +
+                                '<td>#' + booking.bookingID + '</td>' +
+                                '<td>' + booking.eventName + '</td>' +
+                                '<td>' + booking.venueName + '</td>' +
+                                '<td>' + new Date(booking.bookingDate).toLocaleString() + '</td>' +
+                                '<td>' + new Date(booking.eventDate).toLocaleString() + '</td>' +
+                                '<td><span class="badge bg-' + statusClass + '">' + booking.status + '</span></td>' +
+                                '</tr>';
+                            tbody.append(row);
+                        });
+                    }
+                },
+                error: function() {
+                    $('#recentBookingsTable tbody').html('<tr><td colspan="6" class="text-center">Error loading recent bookings.</td></tr>');
+                }
+            });
+        });
+    </script>
+}

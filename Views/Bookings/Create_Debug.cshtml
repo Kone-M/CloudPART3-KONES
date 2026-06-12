@@ -1,0 +1,48 @@
+﻿@model VenueBookingSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "Debug - Create New Booking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="alert alert-info">
+        <h4>Debug Information</h4>
+        <p><strong>Model.VenueID:</strong> @Model?.VenueID</p>
+        <p><strong>Model.EventID:</strong> @Model?.EventID</p>
+        <p><strong>ViewBag.Venues Count:</strong> @(ViewBag.Venues?.Count ?? 0)</p>
+        <p><strong>ViewBag.Events Count:</strong> @(ViewBag.Events?.Count ?? 0)</p>
+
+        @if (ViewBag.Venues != null && ViewBag.Venues.Count > 0)
+        {
+            <h5>Venues:</h5>
+            <ul>
+                @foreach (var venue in ViewBag.Venues)
+                {
+                    <li>ID: @venue.VenueID - Name: @venue.VenueName - Active: @venue.IsActive</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-danger">No venues found in ViewBag!</p>
+        }
+
+        @if (ViewBag.Events != null && ViewBag.Events.Count > 0)
+        {
+            <h5>Events:</h5>
+            <ul>
+                @foreach (var evnt in ViewBag.Events)
+                {
+                    <li>ID: @evnt.EventID - Name: @evnt.EventName - Date: @evnt.EventDate</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-danger">No events found in ViewBag!</p>
+        }
+    </div>
+
+    <a asp-action="Index" class="btn btn-primary">Back to Bookings</a>
+</div>
